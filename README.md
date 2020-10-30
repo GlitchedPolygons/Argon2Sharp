@@ -4,6 +4,8 @@
 This is a C# class that wraps the native C functions 
 from the Argon2 shared lib/Argon2OptDll library.
 
+The [official Argon2 C implementation](https://github.com/P-H-C/phc-winner-argon2) was used here.
+
 For more information about compilation/which version was used, check out [lib/README.md](https://github.com/GlitchedPolygons/Argon2Sharp/tree/master/lib) too!
 
 ### Usage
