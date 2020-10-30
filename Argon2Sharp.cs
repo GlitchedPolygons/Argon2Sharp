@@ -1,4 +1,18 @@
-﻿using System;
+﻿//   Copyright 2020 Raphael Beck
+// 
+//   Licensed under the Apache License, Version 2.0 (the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+// 
+//       http://www.apache.org/licenses/LICENSE-2.0
+// 
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+
+using System;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
@@ -11,7 +25,8 @@ namespace Argon2Sharp
     /// <summary>
     /// Argon2 class that wraps the native C functions from the Argon2OptDll library. <para> </para>
     /// Copy this class into your own C# project and then don't forget to
-    /// copy the lib/ folder to your own project's build output directory!
+    /// copy the lib/ folder to your own project's build output directory! <para> </para>
+    /// By referencing <c>Argon2Sharp.csproj</c>, this should happen automatically!
     /// </summary>
     public class Argon2SharpContext : IDisposable
     {
@@ -130,10 +145,6 @@ namespace Argon2Sharp
                 return res;
             }
         }
-
-        #endregion
-
-        #region Struct mapping
 
         #endregion
 
@@ -406,49 +417,158 @@ namespace Argon2Sharp
             }
         }
 
-        public string Argon2i_HashEncoded(uint t_cost, uint m_cost, uint parallelism, byte[] password, byte[] salt = null, ulong hashlen = 64)
+        /// <summary>
+        /// Hashes a password using Argon2i and encodes it along with its salt into a string.
+        /// </summary>
+        /// <param name="timeCost">The Argon2 time cost parameter (number of iterations) to use.</param>
+        /// <param name="memoryCostKiB">The Argon2 memory cost parameter (in KiB) to use.</param>
+        /// <param name="parallelism">Degree of parallelism to use for Argon2.</param>
+        /// <param name="password">The password bytes.</param>
+        /// <param name="salt">[OPTIONAL] Salt bytes; if left out (set to <c>null</c>), a random salt will be generated and used!</param>
+        /// <param name="hashLength">[OPTIONAL] Desired hash length (default is <c>64</c>).</param>
+        /// <returns>The encoded Argon2 hash; <c>null</c> if hashing and/or encoding failed.</returns>
+        public string Argon2i_HashEncoded(uint timeCost, uint memoryCostKiB, uint parallelism, byte[] password, byte[] salt = null, ulong hashLength = 64)
         {
-            return Argon2_HashEncoded(argon2i_HashEncoded_Delegate, t_cost, m_cost, parallelism, password, salt, hashlen);
+            return Argon2_HashEncoded(argon2i_HashEncoded_Delegate, timeCost, memoryCostKiB, parallelism, password, salt, hashLength);
         }
 
-        public string Argon2d_HashEncoded(uint t_cost, uint m_cost, uint parallelism, byte[] password, byte[] salt = null, ulong hashlen = 64)
+        /// <summary>
+        /// Hashes a password using Argon2d and encodes it along with its salt into a string.
+        /// </summary>
+        /// <param name="timeCost">The Argon2 time cost parameter (number of iterations) to use.</param>
+        /// <param name="memoryCostKiB">The Argon2 memory cost parameter (in KiB) to use.</param>
+        /// <param name="parallelism">Degree of parallelism to use for Argon2.</param>
+        /// <param name="password">The password bytes.</param>
+        /// <param name="salt">[OPTIONAL] Salt bytes; if left out (set to <c>null</c>), a random salt will be generated and used!</param>
+        /// <param name="hashLength">[OPTIONAL] Desired hash length (default is <c>64</c>).</param>
+        /// <returns>The encoded Argon2 hash; <c>null</c> if hashing and/or encoding failed.</returns>
+        public string Argon2d_HashEncoded(uint timeCost, uint memoryCostKiB, uint parallelism, byte[] password, byte[] salt = null, ulong hashLength = 64)
         {
-            return Argon2_HashEncoded(argon2d_HashEncoded_Delegate, t_cost, m_cost, parallelism, password, salt, hashlen);
+            return Argon2_HashEncoded(argon2d_HashEncoded_Delegate, timeCost, memoryCostKiB, parallelism, password, salt, hashLength);
         }
 
-        public string Argon2id_HashEncoded(uint t_cost, uint m_cost, uint parallelism, byte[] password, byte[] salt = null, ulong hashlen = 64)
+        /// <summary>
+        /// Hashes a password using Argon2id and encodes it along with its salt into a string.
+        /// </summary>
+        /// <param name="timeCost">The Argon2 time cost parameter (number of iterations) to use.</param>
+        /// <param name="memoryCostKiB">The Argon2 memory cost parameter (in KiB) to use.</param>
+        /// <param name="parallelism">Degree of parallelism to use for Argon2.</param>
+        /// <param name="password">The password bytes.</param>
+        /// <param name="salt">[OPTIONAL] Salt bytes; if left out (set to <c>null</c>), a random salt will be generated and used!</param>
+        /// <param name="hashLength">[OPTIONAL] Desired hash length (default is <c>64</c>).</param>
+        /// <returns>The encoded Argon2 hash; <c>null</c> if hashing and/or encoding failed.</returns>
+        public string Argon2id_HashEncoded(uint timeCost, uint memoryCostKiB, uint parallelism, byte[] password, byte[] salt = null, ulong hashLength = 64)
         {
-            return Argon2_HashEncoded(argon2id_HashEncoded_Delegate, t_cost, m_cost, parallelism, password, salt, hashlen);
+            return Argon2_HashEncoded(argon2id_HashEncoded_Delegate, timeCost, memoryCostKiB, parallelism, password, salt, hashLength);
         }
 
-        public byte[] Argon2i_HashRaw(uint t_cost, uint m_cost, uint parallelism, byte[] password, byte[] salt, ulong hashlen = 64)
+        /// <summary>
+        /// Hashes a password using Argon2i and a given salt.
+        /// </summary>
+        /// <param name="timeCost">The Argon2 time cost parameter (number of iterations) to use.</param>
+        /// <param name="memoryCostKiB">The Argon2 memory cost parameter (in KiB) to use.</param>
+        /// <param name="parallelism">Degree of parallelism to use for Argon2.</param>
+        /// <param name="password">The password bytes.</param>
+        /// <param name="salt">Salt bytes: this is supposed to be a random array of bytes!</param>
+        /// <param name="hashLength">[OPTIONAL] Desired hash length (default is <c>64</c>).</param>
+        /// <returns>The hash bytes; <c>null</c> if hashing failed.</returns>
+        public byte[] Argon2i_HashRaw(uint timeCost, uint memoryCostKiB, uint parallelism, byte[] password, byte[] salt, ulong hashLength = 64)
         {
-            return Argon2_HashRaw(argon2i_HashRaw_Delegate, t_cost, m_cost, parallelism, password, salt, hashlen);
+            return Argon2_HashRaw(argon2i_HashRaw_Delegate, timeCost, memoryCostKiB, parallelism, password, salt, hashLength);
         }
 
-        public byte[] Argon2d_HashRaw(uint t_cost, uint m_cost, uint parallelism, byte[] password, byte[] salt, ulong hashlen = 64)
+        /// <summary>
+        /// Hashes a password using Argon2d and a given salt.
+        /// </summary>
+        /// <param name="timeCost">The Argon2 time cost parameter (number of iterations) to use.</param>
+        /// <param name="memoryCostKiB">The Argon2 memory cost parameter (in KiB) to use.</param>
+        /// <param name="parallelism">Degree of parallelism to use for Argon2.</param>
+        /// <param name="password">The password bytes.</param>
+        /// <param name="salt">Salt bytes: this is supposed to be a random array of bytes!</param>
+        /// <param name="hashLength">[OPTIONAL] Desired hash length (default is <c>64</c>).</param>
+        /// <returns>The hash bytes; <c>null</c> if hashing failed.</returns>
+        public byte[] Argon2d_HashRaw(uint timeCost, uint memoryCostKiB, uint parallelism, byte[] password, byte[] salt, ulong hashLength = 64)
         {
-            return Argon2_HashRaw(argon2d_HashRaw_Delegate, t_cost, m_cost, parallelism, password, salt, hashlen);
+            return Argon2_HashRaw(argon2d_HashRaw_Delegate, timeCost, memoryCostKiB, parallelism, password, salt, hashLength);
         }
 
-        public byte[] Argon2id_HashRaw(uint t_cost, uint m_cost, uint parallelism, byte[] password, byte[] salt, ulong hashlen = 64)
+        /// <summary>
+        /// Hashes a password using Argon2id and a given salt.
+        /// </summary>
+        /// <param name="timeCost">The Argon2 time cost parameter (number of iterations) to use.</param>
+        /// <param name="memoryCostKiB">The Argon2 memory cost parameter (in KiB) to use.</param>
+        /// <param name="parallelism">Degree of parallelism to use for Argon2.</param>
+        /// <param name="password">The password bytes.</param>
+        /// <param name="salt">Salt bytes: this is supposed to be a random array of bytes!</param>
+        /// <param name="hashLength">[OPTIONAL] Desired hash length (default is <c>64</c>).</param>
+        /// <returns>The hash bytes; <c>null</c> if hashing failed.</returns>
+        public byte[] Argon2id_HashRaw(uint timeCost, uint memoryCostKiB, uint parallelism, byte[] password, byte[] salt, ulong hashLength = 64)
         {
-            return Argon2_HashRaw(argon2id_HashRaw_Delegate, t_cost, m_cost, parallelism, password, salt, hashlen);
+            return Argon2_HashRaw(argon2id_HashRaw_Delegate, timeCost, memoryCostKiB, parallelism, password, salt, hashLength);
         }
 
+        /// <summary>
+        /// Verifies an Argon2i encoded hash against a given password.
+        /// </summary>
+        /// <param name="encoded">The encoded Argon2 hash to verify.</param>
+        /// <param name="password">The password bytes to verify against.</param>
+        /// <returns>Whether the password could be verified or not.</returns>
         public bool Argon2i_Verify(string encoded, byte[] password)
         {
             return Argon2_Verify(argon2i_Verify_Delegate, encoded, password);
         }
 
+        /// <summary>
+        /// Verifies an Argon2d encoded hash against a given password.
+        /// </summary>
+        /// <param name="encoded">The encoded Argon2 hash to verify.</param>
+        /// <param name="password">The password bytes to verify against.</param>
+        /// <returns>Whether the password could be verified or not.</returns>
         public bool Argon2d_Verify(string encoded, byte[] password)
         {
             return Argon2_Verify(argon2d_Verify_Delegate, encoded, password);
         }
 
+        /// <summary>
+        /// Verifies an Argon2id encoded hash against a given password.
+        /// </summary>
+        /// <param name="encoded">The encoded Argon2 hash to verify.</param>
+        /// <param name="password">The password bytes to verify against.</param>
+        /// <returns>Whether the password could be verified or not.</returns>
         public bool Argon2id_Verify(string encoded, byte[] password)
         {
             return Argon2_Verify(argon2id_Verify_Delegate, encoded, password);
+        }
+
+        /// <summary>
+        /// Verifies an Argon2 encoded hash against a given password.
+        /// </summary>
+        /// <param name="encoded">The encoded Argon2 hash to verify.</param>
+        /// <param name="password">The password bytes to verify against.</param>
+        /// <returns>Whether the password could be verified or not.</returns>
+        public bool Argon2_Verify(string encoded, byte[] password)
+        {
+            if (string.IsNullOrEmpty(encoded) || encoded.Length < 10)
+            {
+                return false;
+            }
+
+            if (encoded.StartsWith("$argon2i$"))
+            {
+                return Argon2i_Verify(encoded, password);
+            }
+
+            if (encoded.StartsWith("$argon2d$"))
+            {
+                return Argon2d_Verify(encoded, password);
+            }
+
+            if (encoded.StartsWith("$argon2id$"))
+            {
+                return Argon2id_Verify(encoded, password);
+            }
+
+            return false;
         }
     }
 
@@ -465,44 +585,47 @@ namespace Argon2Sharp
         private static void Main(string[] args)
         {
             using var argon2 = new Argon2SharpContext();
-            
+
             Console.WriteLine("\n\nArgon2 test\n");
 
             byte[] test_pw = Encoding.UTF8.GetBytes("Test PW");
             byte[] wrong_pw = Encoding.UTF8.GetBytes("Wrong PW");
 
             string argon2i_hash = argon2.Argon2i_HashEncoded(64, 65536, 4, test_pw);
-            
+
             Console.WriteLine(argon2i_hash);
             Console.WriteLine("Valid: " + argon2.Argon2i_Verify(argon2i_hash, test_pw));
+            Console.WriteLine("Valid (Generic) : " + argon2.Argon2_Verify(argon2i_hash, test_pw));
             Console.WriteLine("Test against wrong pw: " + (argon2.Argon2i_Verify(argon2i_hash, wrong_pw) ? "FAIL" : "OK"));
 
             string argon2d_hash = argon2.Argon2d_HashEncoded(64, 65536, 4, test_pw);
-            
+
             Console.WriteLine(argon2d_hash);
             Console.WriteLine("Valid: " + argon2.Argon2d_Verify(argon2d_hash, test_pw));
+            Console.WriteLine("Valid (Generic) : " + argon2.Argon2_Verify(argon2d_hash, test_pw));
             Console.WriteLine("Test against wrong pw: " + (argon2.Argon2d_Verify(argon2d_hash, wrong_pw) ? "FAIL" : "OK"));
 
             string argon2id_hash = argon2.Argon2id_HashEncoded(64, 65536, 4, test_pw);
-            
+
             Console.WriteLine(argon2id_hash);
             Console.WriteLine("Valid: " + argon2.Argon2id_Verify(argon2id_hash, test_pw));
+            Console.WriteLine("Valid (Generic) : " + argon2.Argon2_Verify(argon2id_hash, test_pw));
             Console.WriteLine("Test against wrong pw: " + (argon2.Argon2id_Verify(argon2id_hash, wrong_pw) ? "FAIL" : "OK"));
 
             byte[] test_salt = Encoding.UTF8.GetBytes("Test Salt 123!!!");
-            
+
             Console.WriteLine("Testing raw hash... Salt: " + Convert.ToBase64String(test_salt));
 
             byte[] argon2i_raw = argon2.Argon2i_HashRaw(64, 65536, 4, test_pw, test_salt);
-            
+
             Console.WriteLine("Argon2i raw hash: " + Convert.ToBase64String(argon2i_raw));
 
             byte[] argon2d_raw = argon2.Argon2d_HashRaw(64, 65536, 4, test_pw, test_salt);
-            
+
             Console.WriteLine("Argon2d raw hash: " + Convert.ToBase64String(argon2d_raw));
 
             byte[] argon2id_raw = argon2.Argon2id_HashRaw(64, 65536, 4, test_pw, test_salt);
-            
+
             Console.WriteLine("Argon2id raw hash: " + Convert.ToBase64String(argon2id_raw));
         }
     }
