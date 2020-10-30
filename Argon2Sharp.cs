@@ -586,7 +586,7 @@ namespace Argon2Sharp
         {
             using var argon2 = new Argon2SharpContext();
 
-            Console.WriteLine("\n\nArgon2 test\n");
+            Console.WriteLine("\nArgon2Sharp test\n");
 
             byte[] test_pw = Encoding.UTF8.GetBytes("Test PW");
             byte[] wrong_pw = Encoding.UTF8.GetBytes("Wrong PW");
