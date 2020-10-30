@@ -596,21 +596,21 @@ namespace Argon2Sharp
             Console.WriteLine(argon2i_hash);
             Console.WriteLine("Valid: " + argon2.Argon2i_Verify(argon2i_hash, test_pw));
             Console.WriteLine("Valid (Generic) : " + argon2.Argon2_Verify(argon2i_hash, test_pw));
-            Console.WriteLine("Test against wrong pw: " + (argon2.Argon2i_Verify(argon2i_hash, wrong_pw) ? "FAIL" : "OK"));
+            Console.WriteLine("Test against wrong pw: " + (argon2.Argon2i_Verify(argon2i_hash, wrong_pw) ? "FAIL" : "PASS"));
 
             string argon2d_hash = argon2.Argon2d_HashEncoded(64, 65536, 4, test_pw);
 
             Console.WriteLine(argon2d_hash);
             Console.WriteLine("Valid: " + argon2.Argon2d_Verify(argon2d_hash, test_pw));
             Console.WriteLine("Valid (Generic) : " + argon2.Argon2_Verify(argon2d_hash, test_pw));
-            Console.WriteLine("Test against wrong pw: " + (argon2.Argon2d_Verify(argon2d_hash, wrong_pw) ? "FAIL" : "OK"));
+            Console.WriteLine("Test against wrong pw: " + (argon2.Argon2d_Verify(argon2d_hash, wrong_pw) ? "FAIL" : "PASS"));
 
             string argon2id_hash = argon2.Argon2id_HashEncoded(64, 65536, 4, test_pw);
 
             Console.WriteLine(argon2id_hash);
             Console.WriteLine("Valid: " + argon2.Argon2id_Verify(argon2id_hash, test_pw));
             Console.WriteLine("Valid (Generic) : " + argon2.Argon2_Verify(argon2id_hash, test_pw));
-            Console.WriteLine("Test against wrong pw: " + (argon2.Argon2id_Verify(argon2id_hash, wrong_pw) ? "FAIL" : "OK"));
+            Console.WriteLine("Test against wrong pw: " + (argon2.Argon2id_Verify(argon2id_hash, wrong_pw) ? "FAIL" : "PASS"));
 
             byte[] test_salt = Encoding.UTF8.GetBytes("Test Salt 123!!!");
 
