@@ -365,6 +365,10 @@ namespace Argon2Sharp
                 }
 
                 byte[] output = new byte[hashlen * 4];
+                for (int i = 0; i < output.Length; i++)
+                {
+                    output[i] = 0x00;
+                }
 
                 int r = algo(t_cost, m_cost, parallelism, password, (ulong)password.LongLength, salt, (ulong)salt.LongLength, hashlen, output, (ulong)output.LongLength);
                 if (r != 0)
@@ -372,7 +376,7 @@ namespace Argon2Sharp
                     return null;
                 }
 
-                return Encoding.UTF8.GetString(output);
+                return Encoding.UTF8.GetString(output).TrimEnd('\0');
             }
             catch
             {
